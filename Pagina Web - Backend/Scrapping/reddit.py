@@ -2,6 +2,8 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import requests
 from bs4 import BeautifulSoup
+from transformers import BartTokenizer, BartForConditionalGeneration, BartConfig
+
 
 app = Flask(__name__)
 CORS(app)
@@ -26,8 +28,22 @@ def api():
                 texto=parrafo.get_text(strip=True)
                 if texto:
                     content += texto + "\n"
+        
+        model = BartForConditionalGeneration.from_pretrained('facebook/bart-large-cnn')
+        tokenizer = BartTokenizer.from_pretrained('facebook/bart-large-cnn')
+    
+        
+        Resumen = content
+        inputs = tokenizer([Resumen], return_tensors='pt',truncation=True)
 
-        return jsonify({'titulo': titulo_texto, 'content': content})
+
+        summary_ids = model.generate(inputs['input_ids'], max_length=1024, early_stopping=False)
+        final_summary = [tokenizer.decode(g, skip_special_tokens=True) for g in summary_ids]
+
+
+        resultado_final = " ".join(final_summary)
+
+        return jsonify({'titulo': titulo_texto, 'content': resultado_final})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
