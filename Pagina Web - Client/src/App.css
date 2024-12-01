@@ -6,9 +6,6 @@
     background-color: #1e1e2a;
     color: #fff;
     font-family: Arial, sans-serif;
-    margin: 0; 
-    padding: 0; 
-    box-sizing: border-box;
   }
   
   .chat-header {
@@ -32,14 +29,22 @@
   }
   
   .message {
-    margin-bottom: 10px; 
+    margin-bottom: 20px; 
   }
   
   .bot-message {
     background-color: #32324a;
     padding: 10px;
     border-radius: 8px;
-    max-width: 60%;
+    max-width: 50%;
+    overflow: hidden;
+  }
+
+  .bot-message p {
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    word-wrap: break-word; 
+    white-space: pre-wrap;
   }
   
   .user-message {
