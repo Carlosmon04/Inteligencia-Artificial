@@ -21,7 +21,14 @@ def api_web():
         paragraphs = soup.find_all('p')
         content = ' '.join(p.get_text(strip=True) for p in paragraphs)
 
-        return jsonify({'titulo': title, 'content': content})
+
+        model = BartForConditionalGeneration.from_pretrained('facebook/bart-large-cnn')
+        tokenizer = BartTokenizer.from_pretrained('facebook/bart-large-cnn')
+        inputs = tokenizer(content, return_tensors='pt', max_length=1024, truncation=True)
+        summary_ids = model.generate(inputs['input_ids'], max_length=200, min_length=50, length_penalty=2.0, early_stopping=True)
+        final_summary =tokenizer.decode(summary_ids[0], skip_special_tokens=True)
+
+        return jsonify({'titulo': title, 'content': final_summary})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
