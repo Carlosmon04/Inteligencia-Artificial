@@ -83,8 +83,12 @@ def api_reddit():
         final_summary = [tokenizer.decode(g, skip_special_tokens=True) for g in summary_ids]
 
         classification_result = clf(final_summary)
-        label = classification_result[0]['label']
-        confidence = classification_result['score'] 
+        if isinstance(classification_result, list):
+            label = classification_result[0]['label']
+            confidence = classification_result[0]['score']
+        else:
+            label = classification_result['label']
+            confidence = classification_result['score']
 
         if label == 'LABEL_1':
             news_status = "Noticia verdadera"
@@ -100,8 +104,5 @@ def api_reddit():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
     
-
-
-
 if __name__ == '__main__':
     app.run(port=5000, debug=True)

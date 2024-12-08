@@ -6,17 +6,6 @@ const Truebot = () => {
   const [input, setInput] = useState(""); 
   const [selectedOption, setSelectedOption] = useState("Web");
 
-  const wrapText = (text, maxLength) => {
-    return text
-      .split('\n')
-      .map(line =>
-        line.length > maxLength
-          ? line.match(new RegExp(`.{1,${maxLength}}`, 'g')).join('\n')
-          : line
-      )
-      .join('\n');
-  };
-
   const sendMessage = async (url, endpoint) => {
     try {
         const response = await fetch(endpoint, {
@@ -30,6 +19,16 @@ const Truebot = () => {
         }
 
         const data = await response.json();
+        
+        const formatSummary = (summary) => {
+          if (!summary) return ""; 
+          return summary
+            .split(".") 
+            .map((sentence) => sentence.trim()) 
+            .filter((sentence) => sentence.length > 0) 
+            .join(".\n"); 
+        };
+
 
         if (endpoint.includes("check_fake_news")) {
             const botMessage = `Resultado: ${data.label === 'LABEL_1' ? 'Verdadera' : 'Falsa'}\nConfianza: ${(data.score * 100).toFixed(2)}%`;
@@ -38,7 +37,8 @@ const Truebot = () => {
                 { text: botMessage, sender: "bot" },
             ]);
         } else {
-            const botMessage = `Titulo: ${data.titulo}\n\nCuerpo:\n${wrapText(data.content, 100)}`;
+          const botMessage = `Titulo: ${data.titulo}\n\nCuerpo:\n${formatSummary(data.resumen)}
+          \nClasificacion:\n${data.clasificacion}`;
             setMessages((messages) => [
                 ...messages,
                 { text: botMessage, sender: "bot" },
@@ -48,11 +48,10 @@ const Truebot = () => {
         console.error("Error:", error);
         setMessages((messages) => [
             ...messages,
-            { text: "Ocurrió un error al procesar tu solicitud.", sender: "bot" },
+            { text: "Ocurrió un error al procesar tu solicitud." + error, sender: "bot" },
         ]);
     }
 };
-
 
   const handleSend = () => {
     if (input.trim()) {
@@ -69,10 +68,7 @@ const Truebot = () => {
       else if (selectedOption === "Texto") {
         /*Para cuando agreguemos el bert conversacional
         sendMessage(input, "Ya veremos"); */
-      }else if (selectedOption === "FakeNews") {
-        sendMessage(input, "http://127.0.0.1:5000/check_fake_news"); // Nueva ruta
-    }
-
+      }
       setInput(""); 
     }
   };
@@ -114,8 +110,6 @@ const Truebot = () => {
           <option value="Reddit">Reddit</option>
           <option value="Web">Web</option>
           <option value="Texto">Conversacion</option>
-          <option value="FakeNews">Detectar Fake News</option>
-
         </select>
         <button className="send-button" onClick={handleSend}>
           Enviar
