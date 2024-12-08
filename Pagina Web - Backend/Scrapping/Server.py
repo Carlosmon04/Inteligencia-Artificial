@@ -3,6 +3,10 @@ from flask_cors import CORS
 import requests
 from bs4 import BeautifulSoup
 from transformers import BartTokenizer, BartForConditionalGeneration, BartConfig
+from transformers import pipeline
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
+import torch
+
 
 app = Flask(__name__)
 CORS(app)
@@ -21,6 +25,8 @@ def api_web():
         paragraphs = soup.find_all('p')
         content = ' '.join(p.get_text(strip=True) for p in paragraphs)
 
+        MODEL = "jy46604790/Fake-News-Bert-Detect"
+        clf = pipeline("text-classification", model=MODEL, tokenizer=MODEL)
 
         model = BartForConditionalGeneration.from_pretrained('facebook/bart-large-cnn')
         tokenizer = BartTokenizer.from_pretrained('facebook/bart-large-cnn')
@@ -28,7 +34,20 @@ def api_web():
         summary_ids = model.generate(inputs['input_ids'], max_length=200, min_length=50, length_penalty=2.0, early_stopping=True)
         final_summary =tokenizer.decode(summary_ids[0], skip_special_tokens=True)
 
-        return jsonify({'titulo': title, 'content': final_summary})
+        classification_result = clf(final_summary)[0]  
+        label = classification_result['label'] 
+        confidence = classification_result['score'] 
+        # Interpretar el resultado
+        if label == 'LABEL_1':
+            classification_text = "Noticia verdadera"
+        else:
+            classification_text = "Noticia falsa"
+
+        return jsonify({
+            'titulo': title,
+            'resumen': final_summary,
+            'clasificacion': f"{classification_text} (Confianza: {confidence * 100:.2f}%)"
+        })
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
@@ -58,15 +77,31 @@ def api_reddit():
     
         Resumen = content
         inputs = tokenizer([Resumen], return_tensors='pt', truncation=True)
-
+        MODEL = "jy46604790/Fake-News-Bert-Detect"
+        clf = pipeline("text-classification", model=MODEL, tokenizer=MODEL)
         summary_ids = model.generate(inputs['input_ids'], max_length=1024, early_stopping=False)
         final_summary = [tokenizer.decode(g, skip_special_tokens=True) for g in summary_ids]
 
-        resultado_final = " ".join(final_summary)
+        classification_result = clf(final_summary)
+        label = classification_result[0]['label']
+        confidence = classification_result['score'] 
 
-        return jsonify({'titulo': titulo_texto, 'content': resultado_final})
+        if label == 'LABEL_1':
+            news_status = "Noticia verdadera"
+        else:
+            news_status = "Noticia falsa"
+        
+
+        return jsonify({
+            'titulo': titulo_texto,
+            'resumen': final_summary,
+            'clasificacion': f"{news_status} (Confianza: {confidence * 100:.2f}%)"
+        })
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+    
+
+
 
 if __name__ == '__main__':
     app.run(port=5000, debug=True)

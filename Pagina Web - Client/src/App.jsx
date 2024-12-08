@@ -19,35 +19,40 @@ const Truebot = () => {
 
   const sendMessage = async (url, endpoint) => {
     try {
-      const response = await fetch(endpoint, {
-        method: "POST", 
-        headers: {
-          "Content-Type": "application/json", 
-        },
-        body: JSON.stringify({
-          url: url, 
-        }),
-      });
+        const response = await fetch(endpoint, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ url: url, content: input }),
+        });
 
-      if (!response.ok) {
-        throw new Error("Error en la solicitud al servidor");
-      }
+        if (!response.ok) {
+            throw new Error("Error en la solicitud al servidor");
+        }
 
-      const data = await response.json();
+        const data = await response.json();
 
-      const botMessage = `Titulo: ${data.titulo}\n\nCuerpo:\n${wrapText(data.content, 100)}`;
-      setMessages((messages) => [
-        ...messages,
-        { text: botMessage, sender: "bot" }, 
-      ]);
+        if (endpoint.includes("check_fake_news")) {
+            const botMessage = `Resultado: ${data.label === 'LABEL_1' ? 'Verdadera' : 'Falsa'}\nConfianza: ${(data.score * 100).toFixed(2)}%`;
+            setMessages((messages) => [
+                ...messages,
+                { text: botMessage, sender: "bot" },
+            ]);
+        } else {
+            const botMessage = `Titulo: ${data.titulo}\n\nCuerpo:\n${wrapText(data.content, 100)}`;
+            setMessages((messages) => [
+                ...messages,
+                { text: botMessage, sender: "bot" },
+            ]);
+        }
     } catch (error) {
-      console.error("Error:", error);
-      setMessages((messages) => [
-        ...messages,
-        { text: "Ocurrió un error al procesar tu solicitud.", sender: "bot" },
-      ]);
+        console.error("Error:", error);
+        setMessages((messages) => [
+            ...messages,
+            { text: "Ocurrió un error al procesar tu solicitud.", sender: "bot" },
+        ]);
     }
-  };
+};
+
 
   const handleSend = () => {
     if (input.trim()) {
@@ -64,7 +69,9 @@ const Truebot = () => {
       else if (selectedOption === "Texto") {
         /*Para cuando agreguemos el bert conversacional
         sendMessage(input, "Ya veremos"); */
-      }
+      }else if (selectedOption === "FakeNews") {
+        sendMessage(input, "http://127.0.0.1:5000/check_fake_news"); // Nueva ruta
+    }
 
       setInput(""); 
     }
@@ -107,6 +114,8 @@ const Truebot = () => {
           <option value="Reddit">Reddit</option>
           <option value="Web">Web</option>
           <option value="Texto">Conversacion</option>
+          <option value="FakeNews">Detectar Fake News</option>
+
         </select>
         <button className="send-button" onClick={handleSend}>
           Enviar
