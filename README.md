@@ -25,10 +25,10 @@ En caso de que este falle, realizar en esta misma terminal:
 
 Cabe recalcar que para esto es necesario tener instalado Node.js en su laptop. Una vez hecho esto, en la terminal debería verse:
 
- VITE v6.0.1  ready in 328 ms
+- `VITE v6.0.1  ready in 328 ms`
 
-  ➜  Local:   http://localhost:5173/
-  ➜  Network: use --host to expose
-  ➜  press h + enter to show help
+ - ` ➜  Local:   http://localhost:5173/`
+ - ` ➜  Network: use --host to expose`
+ - `➜  press h + enter to show help`
 
-Manteniendo shift y dando click en el  http://localhost:5173/ debera redireccionarlo a la pagina web
+Manteniendo shift y dando click en el  `http://localhost:5173/` debera redireccionarlo a la pagina web
