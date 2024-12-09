@@ -1,14 +1,14 @@
 Instrucciones de compilación: 
 
-Una vez clonado el proyecto nos dirigimos a la carpeta Pagina Web - Backend y en caso de no tener las dependencias instaladas usar los siguientes comandos en la terminal especifica de la carpeta:
+Una vez clonado el proyecto nos dirigimos a la carpeta Pagina Web - Backend y en caso de no tener las dependencias instaladas usar los siguientes comandos en la terminal especifica de la carpeta: \n
 
-pip install transformers
-pip install flask
-pip install flask-cors
-pip install requests
-pip install beautifulSoup4
-pip install torch
-pip install tf-keras
+-pip install transformers\n
+-pip install flask\n
+-pip install flask-cors\n
+-pip install requests\n
+-pip install beautifulSoup4\n
+-pip install torch\n
+-pip install tf-keras\n
 
 
 Una vez hecho esto buscamos en la parte superior derecha del IDE Visual Studio Code el simbolo ▶︎ y esperar hasta que se muestre en la terminal:
