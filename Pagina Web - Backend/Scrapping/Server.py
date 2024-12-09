@@ -42,7 +42,6 @@ def api_web():
             classification_text = "Noticia verdadera"
         else:
             classification_text = "Noticia falsa"
-
         return jsonify({
             'titulo': title,
             'resumen': final_summary,
