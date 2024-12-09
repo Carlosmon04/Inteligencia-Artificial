@@ -1,22 +1,29 @@
-Instrucciones de compilación: 
+Instrucciones de compilación:
 
-Una vez clonado el proyecto nos dirigimos a la carpeta Pagina Web - Backend y en caso de no tener las dependencias instaladas usar los siguientes comandos en la terminal especifica de la carpeta: \n
+Una vez clonado el proyecto, nos dirigimos a la carpeta `Pagina Web - Backend` y, en caso de no tener las dependencias instaladas, usamos los siguientes comandos en la terminal específica de la carpeta:
 
--pip install transformers\n
--pip install flask\n
--pip install flask-cors\n
--pip install requests\n
--pip install beautifulSoup4\n
--pip install torch\n
--pip install tf-keras\n
+- `pip install transformers`
+- `pip install flask`
+- `pip install flask-cors`
+- `pip install requests`
+- `pip install beautifulSoup4`
+- `pip install torch`
+- `pip install tf-keras`
 
+Una vez hecho esto, buscamos en la parte superior derecha del IDE Visual Studio Code el símbolo ▶︎ y esperamos hasta que se muestre en la terminal:
 
-Una vez hecho esto buscamos en la parte superior derecha del IDE Visual Studio Code el simbolo ▶︎ y esperar hasta que se muestre en la terminal:
- * Debugger is active!
- * Debugger PIN: 152-883-327
+* Debugger is active!
+* Debugger PIN: 152-883-327
 
-con esto terminamos el apartado del server para visualizar la pagina web nos dirigimos a la carpeta Pagina Web - Client abrimos su integrated terminal y ejecutamos el comando npm run dev en caso de que este falle realizar en esta misma terminal npm install 
-cabe recalcar para esto es necesario tener instalado node en su laptop una vez hecho esto en la terminal se deberia ver:
+Con esto terminamos el apartado del servidor. Para visualizar la página web, nos dirigimos a la carpeta `Pagina Web - Client`, abrimos su terminal integrada y ejecutamos el comando:
+
+- `npm run dev`
+
+En caso de que este falle, realizar en esta misma terminal:
+
+- `npm install`
+
+Cabe recalcar que para esto es necesario tener instalado Node.js en su laptop. Una vez hecho esto, en la terminal debería verse:
 
  VITE v6.0.1  ready in 328 ms
 
